@@ -30,12 +30,24 @@ pip install streamlit pymupdf rapidfuzz python-dateutil openai
 ```
 
 2. Configure OpenAI API key (optional, for LLM parsing):
+
+   **For Streamlit Cloud (streamlit.app):**
+   - Go to your app dashboard: https://share.streamlit.io/
+   - Click on your app → Settings → Secrets
+   - Add this in the "Secrets" field:
+     ```toml
+     [openai]
+     api_key = "your-openai-api-key-here"
+     ```
+   - Click "Save" and your app will automatically redeploy
+   
+   **For local development:**
    - Copy the example file: `cp .streamlit/secrets.toml.example .streamlit/secrets.toml`
    - Edit `.streamlit/secrets.toml` and add your API key:
-   ```toml
-   [openai]
-   api_key = "your-api-key-here"
-   ```
+     ```toml
+     [openai]
+     api_key = "your-api-key-here"
+     ```
    - Or set environment variable: `export OPENAI_API_KEY=your-key`
    
    **Note**: The `secrets.toml` file is in `.gitignore` and will NOT be committed to GitHub (for security).
