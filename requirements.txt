@@ -1,0 +1,6 @@
+streamlit
+pymupdf
+rapidfuzz
+python-dateutil
+# Optional: for LLM fallback (set OPENAI_API_KEY environment variable)
+# openai
