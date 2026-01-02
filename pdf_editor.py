@@ -1267,7 +1267,7 @@ else:
                         editor_copy.doc.close()
                         st.error(f"❌ PDF validation failed: {str(pdf_error)}")
                         st.info("The PDF may have been corrupted during editing. Please try again or check the template PDF.")
-            
+                
             except Exception as e:
                 st.error(f"Error generating PDF: {str(e)}")
                 import traceback
