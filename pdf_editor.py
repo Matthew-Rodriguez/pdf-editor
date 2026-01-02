@@ -525,14 +525,23 @@ if 'data' not in st.session_state:
     }
 
 # Always load the default PDF template
-# Try absolute path first (local), then relative path (Streamlit Cloud)
-default_pdf = "/Users/mini45/Desktop/PDF-Editor/COA_2511HW-G45D_v2.pdf"
-if not os.path.exists(default_pdf):
-    default_pdf = "COA_2511HW-G45D_v2.pdf"
+pdf_filename = "COA_2511HW-G45D_v2.pdf"
+
+# Try different paths (works locally and on Streamlit Cloud)
+possible_paths = [
+    "/Users/mini45/Desktop/PDF-Editor/COA_2511HW-G45D_v2.pdf",  # Local absolute path
+    pdf_filename,  # Relative path (same directory as script)
+]
+
+default_pdf = None
+for path in possible_paths:
+    if os.path.exists(path):
+        default_pdf = path
+        break
 
 # Load PDF on first run
 if not st.session_state.pdf_loaded:
-    if os.path.exists(default_pdf):
+    if default_pdf:
         try:
             st.session_state.editor = PDFCOAEditor(default_pdf)
             st.session_state.pdf_loaded = True
@@ -579,7 +588,8 @@ if not st.session_state.pdf_loaded:
             st.error(f"Error loading PDF: {str(e)}")
             st.session_state.pdf_loaded = False
     else:
-        st.error(f"Default PDF template not found: {default_pdf}")
+        st.error(f"Default PDF template not found: {pdf_filename}")
+        st.info(f"Tried paths: {', '.join(possible_paths)}")
         st.session_state.pdf_loaded = False
 
 # Sidebar info
