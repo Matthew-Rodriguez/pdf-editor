@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 PDF COA Editor - Web Version using Streamlit
-Run with: streamlit run pdf_editor.py
+Run with: streamlit run pdfed_web.py
 """
 
 import fitz  # PyMuPDF
@@ -215,7 +215,7 @@ class PDFCOAEditor:
                     new_text,
                     fontname=simple_font,
                     fontsize=font_size,
-            align=align,
+                    align=align,
                     flags=16 if should_be_bold else 0
                 )
                 insertion_success = True
@@ -835,7 +835,7 @@ else:
                             editor_copy.page.insert_text((full_bbox[0], full_bbox[3] - 2), 
                                                        f"Sample ID: {sample_id}", 
                                                        fontname="helv", fontsize=sample_id_font_size)
-    else:
+                        else:
                             # Fallback: find just "Sample ID:" label
                             sample_id_instances = editor_copy.find_text_instances("Sample ID:")
                             if sample_id_instances:
@@ -906,10 +906,10 @@ else:
                                         editor_copy.page.insert_text((x_pos, y_pos), total_thc_str, 
                                                                    fontname="hebo", fontsize=font_size)
                                         break
-        else:
+                                else:
                                     # Fallback to replace_text_precise if instance not found
                                     editor_copy.replace_text_precise(current_total_thc, total_thc_str, is_bold=True, exact_match=True)
-        else:
+                            else:
                                 editor_copy.replace_text_precise(current_total_thc, total_thc_str, is_bold=True, exact_match=True)
                         else:
                             # Fallback: try summary section
@@ -1050,10 +1050,10 @@ else:
                                                 editor_copy.page.insert_text((bbox[0], bbox[3]-2), f"{total_thc_str}%", 
                                                                            fontname="hebo", fontsize=font_size)
                                                 break
-            else:
+                                    else:
                                         continue
                                     break
-        else:
+                                else:
                                     continue
                                 break
                     
@@ -1077,7 +1077,7 @@ else:
                                                                            fontname="hebo", fontsize=font_size)
                                                 break
                                     else:
-            continue
+                                        continue
                                     break
                                 else:
                                     continue
@@ -1257,11 +1257,11 @@ else:
                         filename = f"COA_{sample_id}.pdf"
                         
                         st.success("✅ PDF generated successfully!")
-                st.download_button(
+                        st.download_button(
                             label="📥 Download PDF",
                             data=pdf_bytes,
                             file_name=filename,
-                    mime="application/pdf",
+                            mime="application/pdf",
                             use_container_width=True
                         )
                     except Exception as pdf_error:
