@@ -524,22 +524,18 @@ if 'data' not in st.session_state:
         "thcv": ""
     }
 
-# Sidebar for PDF upload
-with st.sidebar:
-    st.header("📁 PDF Template")
-    
-    uploaded_file = st.file_uploader("Upload PDF Template", type=["pdf"])
-    
-    if uploaded_file is not None:
-        # Save uploaded file temporarily
-        temp_path = f"/tmp/{uploaded_file.name}"
-        with open(temp_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
-        
+# Always load the default PDF template
+# Try absolute path first (local), then relative path (Streamlit Cloud)
+default_pdf = "/Users/mini45/Desktop/PDF-Editor/COA_2511HW-G45D_v2.pdf"
+if not os.path.exists(default_pdf):
+    default_pdf = "COA_2511HW-G45D_v2.pdf"
+
+# Load PDF on first run
+if not st.session_state.pdf_loaded:
+    if os.path.exists(default_pdf):
         try:
-            st.session_state.editor = PDFCOAEditor(temp_path)
+            st.session_state.editor = PDFCOAEditor(default_pdf)
             st.session_state.pdf_loaded = True
-            st.success(f"✅ Loaded: {uploaded_file.name}")
             
             # Extract values from PDF
             text = st.session_state.editor.page.get_text()
@@ -579,32 +575,25 @@ with st.sidebar:
                     val = match.group(1)
                     if val != "ND":
                         st.session_state.data[key] = val
-            
         except Exception as e:
             st.error(f"Error loading PDF: {str(e)}")
             st.session_state.pdf_loaded = False
-    
-    # Try to load default PDF
-    default_pdf = "COA_2511HW-G45D_v2.pdf"
-    if not st.session_state.pdf_loaded and os.path.exists(default_pdf):
-        if st.button("Load Default PDF"):
-            try:
-                st.session_state.editor = PDFCOAEditor(default_pdf)
-                st.session_state.pdf_loaded = True
-                st.success(f"✅ Loaded: {default_pdf}")
-                st.rerun()
-            except Exception as e:
-                st.error(f"Error loading PDF: {str(e)}")
+    else:
+        st.error(f"Default PDF template not found: {default_pdf}")
+        st.session_state.pdf_loaded = False
+
+# Sidebar info
+with st.sidebar:
+    st.header("📁 PDF Template")
+    if st.session_state.pdf_loaded:
+        st.success("✅ Template loaded: COA_2511HW-G45D_v2.pdf")
+    else:
+        st.error("❌ Template not loaded")
 
 # Main content
 if not st.session_state.pdf_loaded:
-    st.info("👆 Please upload a PDF template using the sidebar")
-    st.markdown("""
-    ### How to use:
-    1. Upload your COA PDF template using the sidebar
-    2. Edit the fields below
-    3. Click "Generate PDF" to download the edited version
-    """)
+    st.error("❌ Unable to load PDF template. Please check that the file exists.")
+    st.info(f"Expected file: `COA_2511HW-G45D_v2.pdf` (in the same directory as the app)")
 else:
     calc = COACalculator()
     
