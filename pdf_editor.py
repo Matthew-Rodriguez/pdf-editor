@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 PDF COA Editor - Web Version using Streamlit
-Run with: streamlit run pdfed_web.py
+Run with: streamlit run pdf_editor.py
 """
 
 import fitz  # PyMuPDF
